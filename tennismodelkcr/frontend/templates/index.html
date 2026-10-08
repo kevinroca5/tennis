@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>TennisModel KCR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"/>
+<link rel="stylesheet" href="/static/css/main.css"/>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ LOGIN GATE -->
+<div id="login-screen" class="login-screen">
+  <div class="login-bg-grid"></div>
+  <div class="login-glow"></div>
+  <div class="login-box">
+    <div class="login-logo">
+      <span class="logo-badge">KCR</span>
+      <span class="logo-title">TennisModel</span>
+    </div>
+    <div class="login-accent-line"></div>
+    <p class="login-sub">Invite-only access · ML-powered analytics</p>
+
+    <div id="login-tab-bar" class="tab-bar-mini">
+      <button class="tab-mini active" data-tab="login">Sign In</button>
+      <button class="tab-mini" data-tab="register">Register</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form id="login-form" class="auth-form">
+      <div class="field-group">
+        <label>Username</label>
+        <input type="text" id="login-user" autocomplete="username" placeholder="your_username"/>
+      </div>
+      <div class="field-group">
+        <label>Password</label>
+        <input type="password" id="login-pass" autocomplete="current-password" placeholder="••••••••"/>
+      </div>
+      <button type="submit" class="btn-primary btn-full">Sign In</button>
+      <p class="form-error" id="login-err"></p>
+    </form>
+
+    <!-- REGISTER FORM -->
+    <form id="register-form" class="auth-form" style="display:none">
+      <div class="field-group">
+        <label>Username</label>
+        <input type="text" id="reg-user" autocomplete="username" placeholder="choose_username"/>
+      </div>
+      <div class="field-group">
+        <label>Password</label>
+        <input type="password" id="reg-pass" autocomplete="new-password" placeholder="min 8 characters"/>
+      </div>
+      <div class="field-group">
+        <label>Invite Code</label>
+        <input type="text" id="reg-code" placeholder="YOUR_CODE" style="text-transform:uppercase"/>
+      </div>
+      <button type="submit" class="btn-primary btn-full">Create Account</button>
+      <p class="form-error" id="reg-err"></p>
+    </form>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ MAIN APP -->
+<div id="app" style="display:none">
+
+  <!-- TOP NAV -->
+  <header class="topnav">
+    <div class="topnav-inner">
+      <div class="nav-logo">
+        <span class="logo-badge sm">KCR</span>
+        <span class="logo-title sm">TennisModel</span>
+      </div>
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-section="predictions">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
+          Predictions
+        </button>
+        <button class="nav-tab" data-section="rankings">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          OI Rankings
+        </button>
+        <button class="nav-tab" data-section="players">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/></svg>
+          Players
+        </button>
+        <button class="nav-tab" data-section="comparator">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM13 3a1 1 0 00-1 1v3a1 1 0 001 1h3a1 1 0 001-1V4a1 1 0 00-1-1h-3zm1 2v1h1V5h-1zM12 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3zm2 2v-1h1v1h-1z" clip-rule="evenodd"/></svg>
+          Comparator
+        </button>
+        <button class="nav-tab" data-section="model">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg>
+          Model
+        </button>
+      </nav>
+      <div class="nav-right">
+        <div class="model-badge">
+          <span class="dot green"></span>
+          <span>v4 · 75.9%</span>
+        </div>
+        <button class="btn-ghost" id="logout-btn">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+    <!-- ────────────────────────────────── PREDICTIONS -->
+    <section id="sec-predictions" class="app-section active">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Predictions</h1>
+          <p class="section-sub">Current tournament matchup analysis — GradientBoosting v4</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-ghost" id="refresh-pred-btn">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Tournament filter tabs -->
+      <div class="filter-row" id="tournament-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="Shanghai Masters">Shanghai</button>
+        <button class="filter-btn" data-filter="WTA Finals">WTA Finals</button>
+        <button class="filter-btn" data-filter="Vienna Open">Vienna</button>
+      </div>
+
+      <div id="predictions-grid" class="pred-grid">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading predictions…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────── OI RANKINGS -->
+    <section id="sec-rankings" class="app-section">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">OI Rankings</h1>
+          <p class="section-sub">Overperformance Index — cumulative edge vs. betting market</p>
+        </div>
+        <div class="header-actions">
+          <div class="tour-toggle">
+            <button class="tour-btn active" data-tour="ATP">ATP</button>
+            <button class="tour-btn" data-tour="WTA">WTA</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- OI Breakdown Chart -->
+      <div class="card chart-card">
+        <div class="card-header">
+          <h3>OI Breakdown</h3>
+          <p class="card-sub">Quarterly overperformance · click a player to view season data</p>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="oi-chart" height="280"></canvas>
+        </div>
+        <div id="chart-legend" class="chart-legend"></div>
+      </div>
+
+      <!-- Player spotlight (shown on click) -->
+      <div id="player-spotlight" class="player-spotlight" style="display:none">
+        <div class="spotlight-header">
+          <div class="spotlight-identity">
+            <div class="player-flag" id="sp-flag"></div>
+            <div>
+              <h2 id="sp-name" class="sp-name"></h2>
+              <p id="sp-meta" class="sp-meta"></p>
+            </div>
+          </div>
+          <div class="spotlight-kpis" id="sp-kpis"></div>
+          <button class="btn-ghost sp-close" id="sp-close-btn">✕ Close</button>
+        </div>
+        <div class="season-table-wrap">
+          <table class="season-table" id="sp-season-table">
+            <thead>
+              <tr>
+                <th>Season</th>
+                <th>Tour Level</th>
+                <th>Matches</th>
+                <th>Avg Elo</th>
+                <th>Start Elo</th>
+                <th>End Elo</th>
+                <th>Δ Elo</th>
+                <th>OI</th>
+              </tr>
+            </thead>
+            <tbody id="sp-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- OI Rankings Table -->
+      <div class="card">
+        <div class="card-header">
+          <h3>OI Leaderboard</h3>
+          <p class="card-sub">2019 – 2025 · all surfaces</p>
+        </div>
+        <div class="oi-table-wrap">
+          <table class="oi-table" id="oi-rankings-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Player</th>
+                <th>Country</th>
+                <th class="num">OI Total</th>
+                <th class="num">Hard</th>
+                <th class="num">Clay</th>
+                <th class="num">Grass</th>
+                <th class="num">Elo</th>
+                <th class="num">Matches</th>
+              </tr>
+            </thead>
+            <tbody id="oi-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────── PLAYERS -->
+    <section id="sec-players" class="app-section">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Players</h1>
+          <p class="section-sub">Individual profiles · surface splits · Elo trajectory</p>
+        </div>
+        <div class="header-actions">
+          <input class="search-input" id="player-search" placeholder="Search player…" type="text"/>
+        </div>
+      </div>
+      <div id="players-grid" class="players-grid">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading players…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────── COMPARATOR -->
+    <section id="sec-comparator" class="app-section">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Comparator</h1>
+          <p class="section-sub">Head-to-head statistical breakdown</p>
+        </div>
+      </div>
+
+      <div class="comparator-selects">
+        <div class="comp-player-select" id="comp-p1-area">
+          <label>Player 1</label>
+          <select id="comp-p1" class="styled-select">
+            <option value="">Select player…</option>
+          </select>
+        </div>
+        <div class="comp-vs">VS</div>
+        <div class="comp-player-select" id="comp-p2-area">
+          <label>Player 2</label>
+          <select id="comp-p2" class="styled-select">
+            <option value="">Select player…</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="comp-content" style="display:none">
+        <div class="comp-layout">
+          <!-- Radar chart -->
+          <div class="card radar-card">
+            <div class="card-header"><h3>Skill Radar</h3></div>
+            <div class="radar-wrap">
+              <canvas id="radar-chart" width="340" height="340"></canvas>
+            </div>
+          </div>
+
+          <!-- Stat bars -->
+          <div class="card stat-bars-card">
+            <div class="card-header">
+              <h3>Head-to-Head Stats</h3>
+              <div class="comp-legend">
+                <span class="leg gold" id="comp-leg1">P1</span>
+                <span class="leg blue" id="comp-leg2">P2</span>
+              </div>
+            </div>
+            <div id="stat-bars" class="stat-bars"></div>
+          </div>
+        </div>
+
+        <!-- Win probability -->
+        <div class="card">
+          <div class="card-header"><h3>Model Win Probability</h3></div>
+          <div class="win-prob-display" id="win-prob-display"></div>
+        </div>
+      </div>
+
+      <div id="comp-empty" class="empty-state">
+        <svg viewBox="0 0 48 48" fill="none" width="48" height="48"><circle cx="24" cy="24" r="22" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M16 24h16M24 16v16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <p>Select two players to compare</p>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────── MODEL -->
+    <section id="sec-model" class="app-section">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Model</h1>
+          <p class="section-sub">GradientBoosting v4 · 26 features · feats_v6</p>
+        </div>
+      </div>
+
+      <div class="model-grid">
+        <!-- Accuracy card -->
+        <div class="card model-stat-card">
+          <p class="stat-label">Test Accuracy</p>
+          <p class="stat-big gold">75.9%</p>
+          <p class="stat-note">2025 – 2026 holdout</p>
+        </div>
+        <div class="card model-stat-card">
+          <p class="stat-label">Algorithm</p>
+          <p class="stat-big" style="font-size:1.6rem">Gradient<br/>Boosting</p>
+          <p class="stat-note">sklearn GBC</p>
+        </div>
+        <div class="card model-stat-card">
+          <p class="stat-label">Train Period</p>
+          <p class="stat-big" style="font-size:1.8rem">2019 – 2023</p>
+          <p class="stat-note">66K+ ATP/WTA matches</p>
+        </div>
+        <div class="card model-stat-card">
+          <p class="stat-label">Features</p>
+          <p class="stat-big gold">26</p>
+          <p class="stat-note">feats_v6</p>
+        </div>
+      </div>
+
+      <!-- OI Definition -->
+      <div class="card">
+        <div class="card-header"><h3>Overperformance Index (OI)</h3></div>
+        <div class="formula-box">
+          <code class="formula">OI<sub>t</sub> = OI<sub>t-1</sub> + K × (result − p̂<sub>implied</sub>)</code>
+        </div>
+        <p class="card-text">Where <strong>result</strong> ∈ {0,1} is the match outcome and <strong>p̂<sub>implied</sub></strong> is the implied probability derived from closing betting odds. K is a decay constant. OI accumulates across a player's career and measures how consistently they beat market expectations — independent of ranking.</p>
+      </div>
+
+      <!-- Feature list -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Feature Set — feats_v6</h3>
+          <span class="badge">26 features</span>
+        </div>
+        <div class="features-grid" id="features-grid"></div>
+      </div>
+
+      <!-- Elo explanation -->
+      <div class="card">
+        <div class="card-header"><h3>Surface Elo System</h3></div>
+        <p class="card-text">Four independent Elo ratings are maintained per player: <strong>Hard</strong>, <strong>Clay</strong>, <strong>Grass</strong>, and <strong>Indoor Hard</strong>. Ratings are computed exclusively on the 2019–2023 training window to prevent data leakage into the 2025–2026 test set. Expected score uses the standard logistic formula E = 1 / (1 + 10^(−ΔElo/400)).</p>
+        <div class="surface-elo-grid">
+          <div class="surface-tag hard">Hard</div>
+          <div class="surface-tag clay">Clay</div>
+          <div class="surface-tag grass">Grass</div>
+          <div class="surface-tag indoor">Indoor Hard</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Chart.js UMD from cdnjs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>

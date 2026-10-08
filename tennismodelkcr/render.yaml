@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: tennismodelkcr
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: INVITE_CODES
+        sync: false           # Set manually in Render dashboard
+      - key: RAPIDAPI_KEY
+        sync: false           # Set manually in Render dashboard
+      - key: RAPIDAPI_HOST
+        value: tennis-live-data.p.rapidapi.com
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "1440"
+    healthCheckPath: /api/health
+    autoDeploy: true
